@@ -18,17 +18,21 @@ var render = {
 	addObj: function( obj ) {
 		this.objList.push(obj);
 	},
-	removeObj: function( obj ){
-		var index = this._getObjIndex(obj);
+	removeObj: function( id ){
+		var index = this._getObjIndex(id);
 		this.objList.splice(index,1);
 	},
 	setObj: function( obj ){
 
 	},
 	paint: function(){
-		for(i in objList){
-			var obj = objList[i];
-			var ctx = this.ctx;
+		var ctx = this.ctx;
+		ctx.save();
+		ctx.fillStyle = '#888888';
+		ctx.fillRect(0, 0, this.width, this.height);
+		ctx.restore();
+		for(i in render.objList){
+			var obj = render.objList[i];
 			switch(obj.type){
 				case 'rect':
 					ctx.save();
@@ -42,8 +46,8 @@ var render = {
 					ctx.fillStyle = '#FFFFFF';
 					ctx.globalAlpha = obj.alpha;
 					ctx.beginPath();
-					ctx.moveTo(obj.x, obj.y+obj.r);
-					ctx.arc(obj.x+r, obj.y+r, obj.r, 0, Math.PI*2, true);
+					ctx.moveTo(obj.x, obj.y+obj.radius);
+					ctx.arc(obj.x+obj.radius, obj.y+obj.radius, obj.radius, 0, Math.PI*2, true);
 					ctx.fill();
 					ctx.closePath();
 					ctx.restore();
@@ -52,6 +56,8 @@ var render = {
 					ctx.save();
 					ctx.fillStyle = obj.color;
 					ctx.globalAlpha = obj.alpha;
+					ctx.font = obj.size + 'px Arial';
+					ctx.textAlign = 'center';
 					ctx.fillText(obj.message, obj.x, obj.y);
 					ctx.restore();
 					break;
@@ -61,9 +67,9 @@ var render = {
 	},
 
 	//private
-	_getObjIndex: function( obj ){
-		for(n in this.objList){
-			if(this.objList[n]===obj){
+	_getObjIndex: function( id ){
+		for(n in render.objList){
+			if(render.objList[n].id === id){
 				return n;
 			}
 		}
