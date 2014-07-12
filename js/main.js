@@ -1,7 +1,7 @@
 var main = {
 
 	state: 'ready', // states: ready, wait, paint, over
-	turn: 'w', // turn: w for white player, b for black
+	turn: 'b', // turn: w for white player, b for black
 	canvas: null,
 	ctx: null,
 
@@ -41,8 +41,25 @@ var main = {
 		var y = e.clientY - this.offsetTop + window.scrollY;
 		switch(this.state){
 			case ready:
+			case paint:
+			case over:
 				break;
 			case wait:
+				var objId = _checkClickObj(x, y);
+				// user click the point
+				if(objId){
+					var obj  = render._getObjIndex(objId);
+					// make one move
+					if(main.turn == 'w'){
+						if(obj.state == 'aw'){
+							main._playChess(obj, 'w'); // argument: location, color
+						}
+					}else if(main.turn == 'b'){
+						if(obj.state == 'ab'){
+							main._playChess(obj, 'b');
+						}
+					}
+				}
 				break;
 		}
 	},
@@ -71,6 +88,7 @@ var main = {
 	},
 
 	// private
+	// check if the user click the point, if so, return the point`s id, if not, return false
 	_checkClickObj: function(x, y){
 		var list = render.objList;
 		for(i in list){
@@ -82,6 +100,21 @@ var main = {
 			}
 		}
 		return false;
+	},
+	// user action, make one move
+	_playChess: function(obj, color){
+		main.state == 'paint';
+		// todo: animation of the move
+		if(color == 'w'){
+			obj.state == 'w';
+		}else if(color == 'b'){
+			obj.state == 'b';
+		}
+		render.paint();
+	},
+	// check if the player make a three, or even win the game
+	_judge: function(obj){
+		var area = splite(obj.id)
 	}
 };
 
