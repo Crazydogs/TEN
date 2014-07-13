@@ -36,14 +36,22 @@ var render = {
 			switch(obj.type){
 				case 'rect':
 					ctx.save();
-					ctx.fillStyle = '#000000';
+					if(obj.state == 'b'){
+						ctx.fillStyle = '#000000';
+					}else if(obj.state == 'ab'){
+						ctx.fillStyle = '#444444';
+					}
 					ctx.globalAlpha = obj.alpha;
 					ctx.fillRect(obj.x, obj.y, obj.width, obj.height);
 					ctx.restore();
 					break;
 				case 'circle':
 					ctx.save();
-					ctx.fillStyle = '#FFFFFF';
+					if(obj.state == 'w'){
+						ctx.fillStyle = '#FFFFFF';
+					}else if(obj.state == 'aw'){
+						ctx.fillStyle = '#CCCCCC';
+					}
 					ctx.globalAlpha = obj.alpha;
 					ctx.beginPath();
 					ctx.moveTo(obj.x, obj.y+obj.radius);
