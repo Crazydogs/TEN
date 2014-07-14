@@ -11,8 +11,8 @@ var main = {
 		this.y = y;
 		this.alpha = a;
 		// states: aw for active white point, ab for active black point,
-		// w for fixed white point, b for fixed black point
-		// f for fixed point
+		// w for fixed white point, b for fixed black point,
+		// bw for big white point, bb for big black point
 		this.state = state;
 		this.id = id;
 	},
@@ -93,7 +93,7 @@ var main = {
 	_checkClickObj: function(x, y){
 		var list = render.objList;
 		var i;
-		for(i in list){
+		for(var i in list){
 			var obj = list[i];
 			if(obj.type === 'rect' || obj.type === 'circle'){
 				if(x >= obj.x && x <= (obj.x+(obj.radius*2)) && y >= obj.y && y <= (obj.y+(obj.radius)*2)){
@@ -113,11 +113,10 @@ var main = {
 			obj.state = 'b';
 		}
 		render.paint();
+		if(judge.smallJudge(obj)){
+			// todo: if this move make a win in the area
+		}
 		main.state = 'wait';
-	},
-	// check if the player make a three, or even win the game
-	_judge: function(obj){
-		var area = splite(obj.id);
 	}
 };
 
