@@ -31,7 +31,7 @@ var render = {
 		ctx.fillStyle = '#888888';
 		ctx.fillRect(0, 0, this.width, this.height);
 		ctx.restore();
-		for(i in render.objList){
+		for(var i in render.objList){
 			var obj = render.objList[i];
 			switch(obj.type){
 				case 'rect':
@@ -76,7 +76,7 @@ var render = {
 
 	//private
 	_getObjIndex: function( id ){
-		for(n in render.objList){
+		for(var n in render.objList){
 			if(render.objList[n].id === id){
 				return n;
 			}

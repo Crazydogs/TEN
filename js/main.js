@@ -1,7 +1,7 @@
 var main = {
 
 	state: 'ready', // states: ready, wait, paint, over
-	turn: 'b', // turn: w for white player, b for black
+	turn: 'w', // turn: w for white player, b for black
 	canvas: null,
 	ctx: null,
 
@@ -14,6 +14,7 @@ var main = {
 		// w for fixed white point, b for fixed black point
 		// f for fixed point
 		this.state = state;
+		this.id = id;
 	},
 	Rect: function(x, y, w, h, a, id, state){
 		main.Shape.call(this, x, y, a, id, state);
@@ -39,16 +40,16 @@ var main = {
 	click: function(e){
 		var x = e.clientX - this.offsetLeft + window.scrollX;
 		var y = e.clientY - this.offsetTop + window.scrollY;
-		switch(this.state){
-			case ready:
-			case paint:
-			case over:
+		switch(main.state){
+			case 'ready':
+			case 'paint':
+			case 'over':
 				break;
-			case wait:
-				var objId = _checkClickObj(x, y);
+			case 'wait':
+				var objId = main._checkClickObj(x, y);
 				// user click the point
 				if(objId){
-					var obj  = render._getObjIndex(objId);
+					var obj  = render.objList[render._getObjIndex(objId)];
 					// make one move
 					if(main.turn == 'w'){
 						if(obj.state == 'aw'){
@@ -80,8 +81,8 @@ var main = {
 				var y = 150 + Math.floor((i-1)/3)*140 + Math.floor((j-1)/3)*43;
 				var newShape = new this.Circle(x, y, 17, 1, 's'+i+j, 'aw');
 				render.addObj(newShape);
-			};
-		};
+			}
+		}
 		render.paint();
 		// wait for click event
 		this.state = 'wait';
@@ -91,10 +92,11 @@ var main = {
 	// check if the user click the point, if so, return the point`s id, if not, return false
 	_checkClickObj: function(x, y){
 		var list = render.objList;
+		var i;
 		for(i in list){
 			var obj = list[i];
-			if(obj.type === 'rect' || obj === 'circle'){
-				if(x >= obj.x && x <= (obj.x+obj.radius) && y >= obj.y && y <= (obj.y+obj.radius)){
+			if(obj.type === 'rect' || obj.type === 'circle'){
+				if(x >= obj.x && x <= (obj.x+(obj.radius*2)) && y >= obj.y && y <= (obj.y+(obj.radius)*2)){
 					return obj.id;
 				}
 			}
@@ -103,18 +105,19 @@ var main = {
 	},
 	// user action, make one move
 	_playChess: function(obj, color){
-		main.state == 'paint';
+		main.state = 'paint';
 		// todo: animation of the move
 		if(color == 'w'){
-			obj.state == 'w';
+			obj.state = 'w';
 		}else if(color == 'b'){
-			obj.state == 'b';
+			obj.state = 'b';
 		}
 		render.paint();
+		main.state = 'wait';
 	},
 	// check if the player make a three, or even win the game
 	_judge: function(obj){
-		var area = splite(obj.id)
+		var area = splite(obj.id);
 	}
 };
 
