@@ -17,8 +17,8 @@ var judge = {
 		});
 		return judge._judge(objPosition, pointsInArea);
 	},
-	bigJudge: function(area){
-		return judge._judge(area, main.winList);
+	bigJudge: function(area, array){
+		return judge._judge(area, array);
 	},
 	_judge: function(position, array){
 		var row = Math.floor((position-1)/3);
