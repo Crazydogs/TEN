@@ -22,9 +22,6 @@ var render = {
 		var index = this._getObjIndex(id);
 		this.objList.splice(index,1);
 	},
-	setObj: function( obj ){
-
-	},
 	paint: function(){
 		var ctx = this.ctx;
 		ctx.save();
@@ -36,7 +33,7 @@ var render = {
 			switch(obj.type){
 				case 'rect':
 					ctx.save();
-					if(obj.state == 'b'){
+					if(obj.state == 'b' || obj.state =='bb'){
 						ctx.fillStyle = '#000000';
 					}else if(obj.state == 'ab'){
 						ctx.fillStyle = '#444444';
@@ -47,7 +44,7 @@ var render = {
 					break;
 				case 'circle':
 					ctx.save();
-					if(obj.state == 'w'){
+					if(obj.state == 'w' || obj.state == 'bw'){
 						ctx.fillStyle = '#FFFFFF';
 					}else if(obj.state == 'aw'){
 						ctx.fillStyle = '#CCCCCC';

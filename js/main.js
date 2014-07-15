@@ -6,26 +6,17 @@ var main = {
 	ctx: null,
 
 	// obj to render
-	Shape: function(x, y, a, id, state){
+	Shape: function(x, y, r, a, id, state, type){
 		this.x = x;
 		this.y = y;
 		this.alpha = a;
+		this.radius = r;
+		this.type = type;
 		// states: aw for active white point, ab for active black point,
 		// w for fixed white point, b for fixed black point,
 		// bw for big white point, bb for big black point
 		this.state = state;
 		this.id = id;
-	},
-	Rect: function(x, y, w, h, a, id, state){
-		main.Shape.call(this, x, y, a, id, state);
-		this.width = w;
-		this.height = h;
-		this.type = 'rect';
-	},
-	Circle: function(x, y, r, a, id, state){
-		main.Shape.call(this, x, y, a, id, state);
-		this.radius = r;
-		this.type = 'circle';
 	},
 	Text: function(x, y, a, c, m, s, id){
 		main.Shape.call(this, x, y, a);
@@ -79,7 +70,7 @@ var main = {
 				// size of each sudoku is 120, margin of each sudoku is 20
 				var x = 50 + ((i-1)%3)*140 + ((j-1)%3)*43;
 				var y = 150 + Math.floor((i-1)/3)*140 + Math.floor((j-1)/3)*43;
-				var newShape = new this.Circle(x, y, 17, 1, 's'+i+j, 'aw');
+				var newShape = new this.Shape(x, y, 17, 1, 's'+i+j, 'aw', 'circle');
 				render.addObj(newShape);
 			}
 		}
@@ -92,11 +83,14 @@ var main = {
 	// check if the user click the point, if so, return the point`s id, if not, return false
 	_checkClickObj: function(x, y){
 		var list = render.objList;
-		var i;
 		for(var i in list){
 			var obj = list[i];
-			if(obj.type === 'rect' || obj.type === 'circle'){
+			if(obj.type === 'circle'){
 				if(x >= obj.x && x <= (obj.x+(obj.radius*2)) && y >= obj.y && y <= (obj.y+(obj.radius)*2)){
+					return obj.id;
+				}
+			}else if(obj.type === 'rect'){
+				if(x >= obj.x && x <= (obj.x+obj.width) && y >= obj.y && y <= (obj.y+obj.height)){
 					return obj.id;
 				}
 			}
@@ -113,9 +107,30 @@ var main = {
 			obj.state = 'b';
 		}
 		render.paint();
+		// if this move make the user win in the small area
 		if(judge.smallJudge(obj)){
-			// todo: if this move make a win in the area
-			alert('small win!');
+			var area = obj.id.slice(1,2);
+			var list = render.objList;
+			var removeList = [];
+			for(var i in list){
+				var o = list[i];
+				if(o.id.slice(1,2) === area && o.id.slice(0,1) === 's'){
+					removeList.push(o.id);
+				}
+			}
+			for(var j in removeList){
+				render.removeObj(removeList[j]);
+			}
+			if(color == 'w'){
+				var newCircle = new main.Shape(50+((area-1)%3)*140, 150+Math.floor((area-1)/3)*140, 60, 1, 'b'+area, 'b'+color, 'circle');
+				render.addObj(newCircle);
+			}else if(color == 'b'){
+				var newRect = new main.Shape(50+((area-1)%3)*140, 150+Math.floor((area-1)/3)*140, 60, 1, 'b'+area, 'b'+color, 'rect');
+				render.addObj(newRect);
+			}
+			render.paint();
+			// todo: if win the whole game
+			//main._nextTurn(color);
 		}
 		main.state = 'wait';
 	}

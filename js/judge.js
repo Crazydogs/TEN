@@ -19,7 +19,9 @@ var judge = {
 		}
 		return judge._judge(objPosition, pointsInArea);
 	},
-	//
+	bigJudge: function(){
+
+	},
 	_judge: function(position, array){
 		var row = Math.floor((position-1)/3);
 		var rank = (position-1)%3;
