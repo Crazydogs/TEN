@@ -115,6 +115,7 @@ var main = {
 		render.paint();
 		if(judge.smallJudge(obj)){
 			// todo: if this move make a win in the area
+			alert('small win!');
 		}
 		main.state = 'wait';
 	}

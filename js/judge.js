@@ -13,7 +13,7 @@ var judge = {
 		for(var i in list){
 			var obj = list[i];
 			var position = obj.id.slice(2,3);
-			if(obj.color === color && obj.id.slice(1,2) === area){
+			if(obj.state === color && obj.id.slice(1,2) === area){
 				pointsInArea.push(position);
 			}
 		}
@@ -27,18 +27,18 @@ var judge = {
 		var rankCount = 0;
 		for(var i = 1; i < 10; i++){
 			if(Math.floor((i-1)/3) == row){
-				if(judge._isInArray(i, array)){
+				if(judge._isInArray(i.toString(), array)){
 					rowCount++;
 				}
 			}
 			if((i-1)%3 == rank){
-				if(judge._isInArray(i, array)){
+				if(judge._isInArray(i.toString(), array)){
 					rankCount++;
 				}
 			}
 		}
-		var leftSlash = (judge._isInArray(1,array) && judge._isInArray(5,array) && judge._isInArray(9,array));
-		var rightSlash = (judge._isInArray(3,array) && judge._isInArray(5,array) && judge._isInArray(7,array));
+		var leftSlash = (judge._isInArray('1',array) && judge._isInArray('5',array) && judge._isInArray('9',array));
+		var rightSlash = (judge._isInArray('3',array) && judge._isInArray('5',array) && judge._isInArray('7',array));
 		if(rowCount == 3 || rankCount == 3 || leftSlash || rightSlash){
 			return true;
 		}else{
