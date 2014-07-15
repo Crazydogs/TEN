@@ -4,7 +4,8 @@ var main = {
 	turn: 'w', // turn: w for white player, b for black
 	canvas: null,
 	ctx: null,
-	winList: [],
+	winListw: [],
+	winListb: [],
 
 	// obj to render
 	Shape: function(x, y, r, a, id, state, type){
@@ -94,7 +95,11 @@ var main = {
 		// if this move make the user win in the small area
 		if(judge.smallJudge(obj)){
 			var area = obj.id.slice(1,2)
-			main.winList.push(area);
+			if(color == 'w'){
+				main.winListw.push(area);
+			}else if(color == 'b'){
+				main.winListb.push(area);
+			}
 			var area = obj.id.slice(1,2);
 			var removeList = [];
 			render.forEachObj(function(o){
@@ -114,7 +119,7 @@ var main = {
 			}
 			render.paint();
 			// todo: if win the whole game
-			if(judge.bigJudge(area, main.winList)){
+			if(judge.bigJudge(area, main['winList'+color])){
 				alert('win!');
 			}
 			main._nextTurn(color,position);
@@ -160,7 +165,7 @@ var main = {
 				}
 			});
 		}
-		if(!main._isInArray(position, main.winList)){
+		if(!(main._isInArray(position, main.winListw) || main._isInArray(position, main.winListb))){
 			render.forEachObj(function(o){
 				if(!(o.id.slice(1,2) == position || o.state == 'w' || o.state == 'b' || o.state == 'bw' || o.state == 'bb' || o.type == 'text')){
 					o.state = 'f';
