@@ -4,6 +4,7 @@ var main = {
 	turn: 'w', // turn: w for white player, b for black
 	canvas: null,
 	ctx: null,
+	winList: [],
 
 	// obj to render
 	Shape: function(x, y, r, a, id, state, type){
@@ -81,6 +82,7 @@ var main = {
 
 	// user action, make one move
 	_playChess: function(obj, color){
+		var position = obj.id.slice(2,3);
 		main.state = 'paint';
 		// todo: animation of the move
 		if(color == 'w'){
@@ -91,6 +93,8 @@ var main = {
 		render.paint();
 		// if this move make the user win in the small area
 		if(judge.smallJudge(obj)){
+			var area = obj.id.slice(1,2)
+			main.winList.push(area);
 			var area = obj.id.slice(1,2);
 			var removeList = [];
 			render.forEachObj(function(o){
@@ -110,18 +114,22 @@ var main = {
 			}
 			render.paint();
 			// todo: if win the whole game
+			if(judge.bigJudge(area, main.winList)){
+				alert('win!');
+			}
+			main._nextTurn(color,position);
 		}
-		main._nextTurn(color);
+		main._nextTurn(color, position);
 		main.state = 'wait';
 	},
 
-	_nextTurn: function(color){
+	_nextTurn: function(color, position){
 		if(color == 'w'){
 			main.turn = 'b';
 		}else if(color == 'b'){
 			main.turn = 'w';
 		}
-		main._changeShape(color);
+		main._changeShape(color, position);
 		render.paint();
 	},
 
@@ -136,22 +144,38 @@ var main = {
 		}
 		return false;
 	},
-	_changeShape: function(color){
+	_changeShape: function(color, position){
 		if(color == 'w'){
 			render.forEachObj(function(o){
-				if(o.state == 'aw'){
+				if(o.state == 'aw' || o.state == 'f'){
 					o.state = 'ab';
 					o.type = 'rect';
 				}
 			});
 		}else if(color == 'b'){
 			render.forEachObj(function(o){
-				if(o.state == 'ab'){
+				if(o.state == 'ab' || o.state == 'f'){
 					o.state = 'aw';
 					o.type = 'circle';
 				}
 			});
 		}
+		if(!main._isInArray(position, main.winList)){
+			render.forEachObj(function(o){
+				if(!(o.id.slice(1,2) == position || o.state == 'w' || o.state == 'b' || o.state == 'bw' || o.state == 'bb' || o.type == 'text')){
+					o.state = 'f';
+					var a =1;
+				}
+			});	
+		}
+	},
+	_isInArray: function(obj, array){
+		for(var i = 0; i<array.length; i++){
+			if(obj === array[i]){
+				return true;
+			}
+		}
+		return false;
 	}
 };
 

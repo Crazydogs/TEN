@@ -36,7 +36,9 @@ var render = {
 					if(obj.state == 'b' || obj.state =='bb'){
 						ctx.fillStyle = '#000000';
 					}else if(obj.state == 'ab'){
-						ctx.fillStyle = '#444444';
+						ctx.fillStyle = '#333333';
+					}else if(obj.state == 'f'){
+						ctx.fillStyle = '#777777';
 					}
 					ctx.globalAlpha = obj.alpha;
 					ctx.fillRect(obj.x, obj.y, obj.radius*2, obj.radius*2);
@@ -47,7 +49,9 @@ var render = {
 					if(obj.state == 'w' || obj.state == 'bw'){
 						ctx.fillStyle = '#FFFFFF';
 					}else if(obj.state == 'aw'){
-						ctx.fillStyle = '#CCCCCC';
+						ctx.fillStyle = '#DDDDDD';
+					}else if(obj.state == 'f'){
+						ctx.fillStyle = "#AAAAAA";
 					}
 					ctx.globalAlpha = obj.alpha;
 					ctx.beginPath();
