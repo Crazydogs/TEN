@@ -39,7 +39,7 @@ var render = {
 						ctx.fillStyle = '#444444';
 					}
 					ctx.globalAlpha = obj.alpha;
-					ctx.fillRect(obj.x, obj.y, obj.width, obj.height);
+					ctx.fillRect(obj.x, obj.y, obj.radius*2, obj.radius*2);
 					ctx.restore();
 					break;
 				case 'circle':
@@ -79,6 +79,15 @@ var render = {
 			}
 		}
 		return -1;
+	},
+	// do the same process to each obj in the render`s objList
+	forEachObj: function(fn){
+		var i;
+		var list = render.objList;
+		for(i in list){
+			var obj = list[i];
+			fn(obj);
+		}
 	}
 };
 

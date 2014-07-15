@@ -79,24 +79,6 @@ var main = {
 		this.state = 'wait';
 	},
 
-	// private
-	// check if the user click the point, if so, return the point`s id, if not, return false
-	_checkClickObj: function(x, y){
-		var list = render.objList;
-		for(var i in list){
-			var obj = list[i];
-			if(obj.type === 'circle'){
-				if(x >= obj.x && x <= (obj.x+(obj.radius*2)) && y >= obj.y && y <= (obj.y+(obj.radius)*2)){
-					return obj.id;
-				}
-			}else if(obj.type === 'rect'){
-				if(x >= obj.x && x <= (obj.x+obj.width) && y >= obj.y && y <= (obj.y+obj.height)){
-					return obj.id;
-				}
-			}
-		}
-		return false;
-	},
 	// user action, make one move
 	_playChess: function(obj, color){
 		main.state = 'paint';
@@ -110,14 +92,12 @@ var main = {
 		// if this move make the user win in the small area
 		if(judge.smallJudge(obj)){
 			var area = obj.id.slice(1,2);
-			var list = render.objList;
 			var removeList = [];
-			for(var i in list){
-				var o = list[i];
+			render.forEachObj(function(o){
 				if(o.id.slice(1,2) === area && o.id.slice(0,1) === 's'){
 					removeList.push(o.id);
 				}
-			}
+			});
 			for(var j in removeList){
 				render.removeObj(removeList[j]);
 			}
@@ -130,9 +110,48 @@ var main = {
 			}
 			render.paint();
 			// todo: if win the whole game
-			//main._nextTurn(color);
 		}
+		main._nextTurn(color);
 		main.state = 'wait';
+	},
+
+	_nextTurn: function(color){
+		if(color == 'w'){
+			main.turn = 'b';
+		}else if(color == 'b'){
+			main.turn = 'w';
+		}
+		main._changeShape(color);
+		render.paint();
+	},
+
+	// check if the user click the point, if so, return the point`s id, if not, return false
+	_checkClickObj: function(x, y){
+		var list = render.objList;
+		for(var i in list){
+			var obj = list[i];
+			if(x >= obj.x && x <= (obj.x+(obj.radius*2)) && y >= obj.y && y <= (obj.y+(obj.radius)*2)){
+				return obj.id;
+			}
+		}
+		return false;
+	},
+	_changeShape: function(color){
+		if(color == 'w'){
+			render.forEachObj(function(o){
+				if(o.state == 'aw'){
+					o.state = 'ab';
+					o.type = 'rect';
+				}
+			});
+		}else if(color == 'b'){
+			render.forEachObj(function(o){
+				if(o.state == 'ab'){
+					o.state = 'aw';
+					o.type = 'circle';
+				}
+			});
+		}
 	}
 };
 

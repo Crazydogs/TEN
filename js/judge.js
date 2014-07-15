@@ -7,16 +7,14 @@ var judge = {
 		var objPosition = obj.id.slice(2,3);
 		// a list of points`s position in same area as the argument
 		var pointsInArea = [];
-		var list = render.objList;
 		// find out all points that in the same area and have the same color,
 		// then put there position number into the array.
-		for(var i in list){
-			var obj = list[i];
-			var position = obj.id.slice(2,3);
-			if(obj.state === color && obj.id.slice(1,2) === area){
+		render.forEachObj(function(o){
+			var position = o.id.slice(2,3);
+			if(o.state === color && o.id.slice(1,2) === area){
 				pointsInArea.push(position);
 			}
-		}
+		});
 		return judge._judge(objPosition, pointsInArea);
 	},
 	bigJudge: function(){
