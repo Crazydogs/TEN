@@ -35,6 +35,12 @@ var main = {
 		var y = e.clientY - this.offsetTop + window.scrollY;
 		switch(main.state){
 			case 'ready':
+				render.removeAll();
+				main._addPoints();
+				main._addTitle();
+				main.state = 'wait';
+				render.paint();
+				break;
 			case 'paint':
 			case 'over':
 				break;
@@ -60,12 +66,36 @@ var main = {
 
 	// process
 	init: function(){
-		var width = (render.width ? render.width : document.getElementById('main').width);
-		var height = (render.height ? render.height : document.getElementById('main').height);
-		// argument: x, y, alpha, color, message, size, id
-		var title = new this.Text(width/2, 100, 1, '#ffffff', 'TEN', 80, 't1');
-		render.addObj(title);
-		// create the board
+		main._addTips();
+		main._addTitle();
+		render.paint();
+		// wait for click event
+		this.state = 'ready';
+	},
+
+	// creat some message to tell player how to play
+	_addTips: function(){
+		var message = [
+			'This game is a Tic-tac-toe game.',
+			'',
+			'Get three-in-a-row in any of the nine area,',
+			'make you win a this area on the master grid.',
+			'',
+			'Where you play in the small grid dictates in',
+			'which grid your opponent plays next turn',
+			'',
+			'Playing into a grid that is already won',
+			'allows your opponent to pick any grid he wants',
+			'',
+			'Three-in-a-row on the master grid wins!'
+		];
+		for(var i in message){
+			var newMessage = new main.Text(250, i*30+150, 1, '#FFFFFF', message[i], 24, 'm'+i);
+			render.addObj(newMessage);
+		}
+	},
+	// creat 81 points and add to the render list
+	_addPoints: function(){
 		for (var i = 1; i < 10; i++) {
 			for (var j = 1; j < 10; j++) {
 				// size of the point is 17, margin of each point is 9
@@ -76,9 +106,11 @@ var main = {
 				render.addObj(newShape);
 			}
 		}
-		render.paint();
-		// wait for click event
-		this.state = 'wait';
+	},
+	// creat a title obj and add to the render list
+	_addTitle: function(){
+		var title = new this.Text(250, 100, 1, '#FFFFFF', 'TEN', 80, 't1');
+		render.addObj(title);
 	},
 
 	// user action, make one move
@@ -111,9 +143,11 @@ var main = {
 				render.removeObj(removeList[j]);
 			}
 			if(color == 'w'){
+				// arguments: x, y, radius, alpha, id, state, type
 				var newCircle = new main.Shape(50+((area-1)%3)*140, 150+Math.floor((area-1)/3)*140, 60, 1, 'b'+area, 'b'+color, 'circle');
 				render.addObj(newCircle);
 			}else if(color == 'b'){
+				// arguments: x, y, radius, alpha, id, state, type
 				var newRect = new main.Shape(50+((area-1)%3)*140, 150+Math.floor((area-1)/3)*140, 60, 1, 'b'+area, 'b'+color, 'rect');
 				render.addObj(newRect);
 			}

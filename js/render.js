@@ -41,6 +41,9 @@ var render = {
 		var index = this._getObjIndex(id);
 		this.objList.splice(index,1);
 	},
+	removeAll: function(){
+		this.objList = [];
+	},
 	// do the same process to each obj in the render`s objList
 	forEachObj: function(fn){
 		var i;
