@@ -1,10 +1,27 @@
 var render = {
 
+	// information about canvas
 	width: null,
 	height: null,
 	ctx: null,
+
+	// obj to render
 	objList: [],
 
+	// color
+	backgroundColor: '#888888',
+	whiteColor: '#FFFFFF',
+	whiteColorDarker: '#DDDDDD',
+	whiteColorDarkest: '#AAAAAA',
+	blackColor: '#000000',
+	blackColorLighter: '#333333',
+	blackColorLightest: '#777777',
+
+	/*
+	 *  initialize
+	 *  set the property about the canvas,
+	 *  and clean the canvas
+	 */
 	init: function(){
 		var canvas = document.getElementById('main');
 		if(!(this.width && this.height)){
@@ -15,6 +32,8 @@ var render = {
 		this.ctx.fillStyle = '#888888';
 		this.ctx.fillRect(0, 0, this.width, this.height);
 	},
+
+	// funciton to operate the objList
 	addObj: function( obj ) {
 		this.objList.push(obj);
 	},
@@ -22,14 +41,25 @@ var render = {
 		var index = this._getObjIndex(id);
 		this.objList.splice(index,1);
 	},
+	// do the same process to each obj in the render`s objList
+	forEachObj: function(fn){
+		var i;
+		var list = render.objList;
+		for(i in list){
+			var obj = list[i];
+			fn(obj);
+		}
+	},
+
 	paint: function(){
 		var ctx = this.ctx;
+		//clearn the canvas
 		ctx.save();
 		ctx.fillStyle = '#888888';
 		ctx.fillRect(0, 0, this.width, this.height);
 		ctx.restore();
-		for(var i in render.objList){
-			var obj = render.objList[i];
+		// traverse the objList
+		render.forEachObj(function(obj){
 			switch(obj.type){
 				case 'rect':
 					ctx.save();
@@ -72,7 +102,7 @@ var render = {
 					break;
 				default:
 			}
-		}
+		});
 	},
 
 	//private
@@ -83,15 +113,6 @@ var render = {
 			}
 		}
 		return -1;
-	},
-	// do the same process to each obj in the render`s objList
-	forEachObj: function(fn){
-		var i;
-		var list = render.objList;
-		for(i in list){
-			var obj = list[i];
-			fn(obj);
-		}
 	}
 };
 
